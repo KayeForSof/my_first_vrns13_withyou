@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PARA MI EL AMOR DE MI VIDA</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Great+Vibes:wght@400&family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@400;700&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a0d0d 25%, #2d1515 50%, #1a0d0d 75%, #0c0c0c 100%);
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Efectos de partículas de fondo */
+    .background-effects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hearts-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
+    }
+
+    .heart-particle {
+      position: absolute;
+      color: #ff6b9d;
+      font-size: 20px;
+      animation: floatHeart 8s infinite linear;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Contenedor principal */
+    .main-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header mejorado */
+    .header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: #ff6b9d;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: #ffd700;
+      opacity: 0.9;
+    }
+
+    /* Slider mejorado */
+    .slider-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+
+    .slider {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: 70vh;
+      min-height: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      overflow: hidden;
+      background: #000;
+    }
+
+    /* Contenedor de imágenes */
+    .images-container {
+      display: flex;
+      width: 70%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide-image {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.3s ease;
+    }
+
+    .slide-image:hover img {
+      transform: scale(1.05);
+    }
+
+    .slide-image:first-child {
+      border-right: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Contenedor del mensaje */
+    .message-container {
+      width: 30%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(255, 107, 157, 0.1) 50%, rgba(0, 0, 0, 0.8) 100%);
+      backdrop-filter: blur(10px);
+      border-left: 2px solid rgba(255, 107, 157, 0.3);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .slide.prev {
+      transform: translateX(-100%) scale(0.8);
+    }
+
+    .slide.next {
+      transform: translateX(100%) scale(0.8);
+    }
+
+    /* Contenido del slide */
+    .slide-content {
+      text-align: center;
+      max-width: 100%;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.8s ease-out 0.3s;
+    }
+
+    .slide.active .slide-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .slide-content .message {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+      color: #fff;
+      line-height: 1.6;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      margin-bottom: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Efectos de partículas en cada slide */
+    .slide-particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    /* Controles mejorados */
+    .controls {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 107, 157, 0.3);
+      border-color: #ff6b9d;
+      transform: scale(1.1);
+    }
+
+    .audio-btn {
+      background: rgba(255, 107, 157, 0.3);
+      border-color: #ff6b9d;
+      position: relative;
+    }
+
+    .audio-btn.playing {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 157, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 157, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 157, 0);
+      }
+    }
+
+    /* Indicadores de slide */
+    .slide-indicators {
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+
+    .indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      background: #ff6b9d;
+      transform: scale(1.2);
+    }
+
+    /* Animación de elementos flotantes */
+    .floating-elements {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .floating-element {
+      position: absolute;
+      font-size: 24px;
+      opacity: 0.8;
+      animation: float 3s infinite ease-in-out;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+    }
+
+    /* Efectos especiales */
+    .tulip-area {
+      position: relative;
+      width: 100%;
+      height: 50px;
+      pointer-events: none;
+      overflow: visible;
+      margin-top: 1rem;
+    }
+
+    .tulip-element {
+      position: absolute;
+      font-size: 18px;
+      animation: subirTulipan 3s linear infinite;
+    }
+
+    @keyframes subirTulipan {
+      from {
+        transform: translateY(30px) scale(1);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateY(-50px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      animation: sparkle 2s infinite;
+    }
+
+    @keyframes sparkle {
+
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        padding: 1.5rem 1rem;
+      }
+
+      .slider-container {
+        padding: 1rem;
+      }
+
+      .slider {
+        height: 60vh;
+        min-height: 400px;
+      }
+
+      .slide {
+        flex-direction: column;
+      }
+
+      .images-container {
+        width: 100%;
+        height: 60%;
+        flex-direction: row;
+      }
+
+      .message-container {
+        width: 100%;
+        height: 40%;
+        padding: 1rem;
+        border-left: none;
+        border-top: 2px solid rgba(255, 107, 157, 0.3);
+      }
+
+      .slide-content .message {
+        padding: 1rem;
+        font-size: clamp(0.8rem, 4vw, 1.2rem);
+      }
+
+      .controls {
+        bottom: 1rem;
+        gap: 0.5rem;
+      }
+
+      .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+      }
+
+      .slide-indicators {
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .slider {
+        height: 50vh;
+        min-height: 350px;
+        margin: 0 0.5rem;
+      }
+
+      .images-container {
+        height: 65%;
+      }
+
+      .message-container {
+        height: 35%;
+        padding: 0.8rem;
+      }
+
+      .slide-content .message {
+        font-size: clamp(0.7rem, 5vw, 1rem);
+        padding: 0.8rem;
+      }
+
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-effects">
+    <div class="hearts-bg"></div>
+  </div>
+
+  <div class="main-container">
+    <header class="header">
+      <h1>Para el Amor de mi Vida</h1>
+      <p class="subtitle">En este Viernes 13 especial 💖</p>
+    </header>
+
+    <div class="slider-container">
+      <div class="slider" id="slider">
+        <!-- Slide 1: img1.jpeg + img2.jpeg -->
+        <div class="slide active">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img1.jpeg" alt="Imagen 1">
+            </div>
+            <div class="slide-image">
+              <img src="img/img2.jpeg" alt="Imagen 2">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                En este Viernes 13 celebro la magia de tu sonrisa que ilumina mis noches, recordándome que nuestro amor
+                es más fuerte que cualquier superstición y que cada momento contigo es un regalo eterno.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+
+        <!-- Slide 2: img2.jpeg + img3.jpeg -->
+        <div class="slide">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img2.jpeg" alt="Imagen 2">
+            </div>
+            <div class="slide-image">
+              <img src="img/img3.jpeg" alt="Imagen 3">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                Cada latido de mi corazón palpita al ritmo de tu nombre en este Viernes 13, porque encontrarte ha
+                convertido mis días en poesía y mis noches en promesas de pasión sin fin.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+
+        <!-- Slide 3: img3.jpeg + img4.jpeg -->
+        <div class="slide">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img3.jpeg" alt="Imagen 3">
+            </div>
+            <div class="slide-image">
+              <img src="img/img4.jpeg" alt="Imagen 4">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                Tu risa es mi talismán en este día legendario; en cada susurro descubro un refugio de ternura donde
+                nuestros sueños se entrelazan y el amor florece con fuerza sobrenatural.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+
+        <!-- Slide 4: img4.jpeg + img5.jpeg -->
+        <div class="slide">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img4.jpeg" alt="Imagen 4">
+            </div>
+            <div class="slide-image">
+              <img src="img/img5.jpeg" alt="Imagen 5">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                Bajo el hechizo de este Viernes 13 te prometo devoción infinita: cada caricia tuya despierta en mí un
+                universo de deseo y cada mirada me confirma que nuestro lazo trasciende cualquier temor.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+
+        <!-- Slide 5: img5.jpeg + img6.jpeg -->
+        <div class="slide">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img5.jpeg" alt="Imagen 5">
+            </div>
+            <div class="slide-image">
+              <img src="img/img6.jpeg" alt="Imagen 6">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                Nuestro amor desafía los mitos y alimenta mis anhelos más profundos, convirtiendo este Viernes 13 en la
+                excusa perfecta para demostrarte que mi vida sin ti carecería de todo sentido y de toda luz.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+
+        <!-- Slide 6: img6.jpeg + img3.jpeg -->
+        <div class="slide">
+          <div class="images-container">
+            <div class="slide-image">
+              <img src="img/img6.jpeg" alt="Imagen 6">
+            </div>
+            <div class="slide-image">
+              <img src="img/img3.jpeg" alt="Imagen 3">
+            </div>
+          </div>
+          <div class="message-container">
+            <div class="slide-content">
+              <p class="message">
+                En este día especial, reafirmo mi promesa de cuidarte y regalarte cada amanecer juntos, porque amarte es
+                convertir cualquier superstición en un motivo más para celebrar la eternidad de nuestro vínculo.
+              </p>
+              <div class="tulip-area"></div>
+            </div>
+          </div>
+          <div class="slide-particles"></div>
+        </div>
+      </div>
+
+      <div class="slide-indicators">
+        <div class="indicator active" data-slide="0"></div>
+        <div class="indicator" data-slide="1"></div>
+        <div class="indicator" data-slide="2"></div>
+        <div class="indicator" data-slide="3"></div>
+        <div class="indicator" data-slide="4"></div>
+        <div class="indicator" data-slide="5"></div>
+      </div>
+
+      <div class="controls">
+        <div class="control-btn audio-btn" id="audioBtn">
+          <span>🎵</span>
+        </div>
+        <div class="control-btn" id="prevBtn">
+          <span>❮</span>
+        </div>
+        <div class="control-btn" id="nextBtn">
+          <span>❯</span>
+        </div>
+      </div>
+
+      <div class="floating-elements" id="floatingElements"></div>
+    </div>
+  </div>
+
+  <audio id="backgroundAudio" loop>
+    <source src="img/v13.mpga" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Variables globales
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const totalSlides = slides.length;
+    const audio = document.getElementById('backgroundAudio');
+    const audioBtn = document.getElementById('audioBtn');
+    let isPlaying = false;
+
+    // Función para cambiar slide
+    function goToSlide(index) {
+      // Remover clases activas
+      slides.forEach(slide => slide.classList.remove('active', 'prev', 'next'));
+      indicators.forEach(indicator => indicator.classList.remove('active'));
+
+      // Añadir clase activa al slide actual
+      slides[index].classList.add('active');
+      indicators[index].classList.add('active');
+
+      // Añadir clases prev y next
+      if (index > 0) {
+        slides[index - 1].classList.add('prev');
+      }
+      if (index < totalSlides - 1) {
+        slides[index + 1].classList.add('next');
+      }
+
+      currentSlide = index;
+      createSlideParticles(index);
+    }
+
+    // Función para siguiente slide
+    function nextSlide() {
+      const next = (currentSlide + 1) % totalSlides;
+      goToSlide(next);
+    }
+
+    // Función para slide anterior
+    function prevSlide() {
+      const prev = (currentSlide - 1 + totalSlides) % totalSlides;
+      goToSlide(prev);
+    }
+
+    // Event listeners
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+
+    // Indicadores
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => goToSlide(index));
+    });
+
+    // Control de audio
+    audioBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        audioBtn.innerHTML = '<span>🎵</span>';
+        audioBtn.classList.remove('playing');
+      } else {
+        audio.play().then(() => {
+          audioBtn.innerHTML = '<span>🎶</span>';
+          audioBtn.classList.add('playing');
+        }).catch(() => {
+          console.log('Error al reproducir audio');
+        });
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Auto-play del slider
+    let autoplayInterval = setInterval(nextSlide, 5000);
+
+    // Pausar autoplay al hover
+    document.querySelector('.slider').addEventListener('mouseenter', () => {
+      clearInterval(autoplayInterval);
+    });
+
+    document.querySelector('.slider').addEventListener('mouseleave', () => {
+      autoplayInterval = setInterval(nextSlide, 5000);
+    });
+
+    // Funciones para efectos
+    function createSlideParticles(slideIndex) {
+      const slideParticles = slides[slideIndex].querySelector('.slide-particles');
+      slideParticles.innerHTML = '';
+
+      // Crear partículas flotantes
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.className = 'floating-element';
+          particle.innerHTML = Math.random() > 0.5 ? '💖   💖' : '🌷  🌷';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 2 + 's';
+          slideParticles.appendChild(particle);
+
+          setTimeout(() => {
+            particle.remove();
+          }, 3000);
+        }, i * 200);
+      }
+    }
+
+    function createBackgroundHearts() {
+      const heartsContainer = document.querySelector('.hearts-bg');
+
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart-particle';
+        heart.innerHTML = '💕  💕';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        heartsContainer.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 8000);
+      }, 1000);
+    }
+
+    function createSparkles() {
+      const floatingElements = document.getElementById('floatingElements');
+
+      setInterval(() => {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = Math.random() * 2 + 's';
+        sparkle.innerHTML = '🌷  🌷';
+        sparkle.style.fontSize = '16px';
+        sparkle.style.position = 'absolute';
+        sparkle.style.color = '#ffd700';
+        sparkle.style.animation = 'sparkle 2s infinite';
+        floatingElements.appendChild(sparkle);
+
+        setTimeout(() => {
+          sparkle.remove();
+        }, 2000);
+      }, 500);
+    }
+
+    let startX = 0;
+    let startY = 0;
+
+    document.querySelector('.slider').addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    });
+
+    document.querySelector('.slider').addEventListener('touchend', (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const endY = e.changedTouches[0].clientY;
+      const diffX = startX - endX;
+      const diffY = startY - endY;
+
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    });
+
+    createBackgroundHearts();
+    createSparkles();
+    createSlideParticles(0);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key === 'ArrowRight') {
+        nextSlide();
+      } else if (e.key === ' ') {
+        e.preventDefault();
+        audioBtn.click();
+      }
+    });
+  </script>
+</body>
+
+</html>
